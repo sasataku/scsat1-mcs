@@ -627,3 +627,36 @@ containers:
       - name: "ERROR_CODE_OF_ERASE_CFG_FLASH"
         signed: true
         bit: 32
+  - name: UPLOAD_OPEN_CMD_REPLY
+    endian: true
+    conditions:
+      - name: "../csp_sport"
+        val: 15
+      - name: "ADCS/telemetry_id"
+        val: 0
+    parameters:
+      - name: "ERROR_CODE_OF_UPLOAD_OPEN"
+        signed: true
+        bit: 32
+  - name: UPLOAD_DATA_CMD_REPLY
+    endian: true
+    conditions:
+      - name: "../csp_sport"
+        val: 15
+      - name: "ADCS/telemetry_id"
+        val: 1
+    parameters:
+      - name: "ERROR_CODE_OF_UPLOAD_DATA"
+        signed: true
+        bit: 32
+  - name: UPLOAD_CLOSE_CMD_REPLY
+    endian: true
+    conditions:
+      - name: "../csp_sport"
+        val: 15
+      - name: "ADCS/telemetry_id"
+        val: 2
+    parameters:
+      - name: "ERROR_CODE_OF_UPLOAD_CLOSE"
+        signed: true
+        bit: 32
