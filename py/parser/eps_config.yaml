@@ -1,5 +1,5 @@
 pdf-name: "./eps.pdf"
-csv-dir: "./eps_csv"
+csv-name: "./eps.csv"
 parameters:
   - name: "/SCSAT1/EPS/timestamp"
   - name: "/SCSAT1/EPS/uptime"

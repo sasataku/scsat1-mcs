@@ -48,14 +48,13 @@ def write_csv():
     global x_data
     global y_data
 
-    for param in configs['parameters']:
-        target = param['name']
-        csvdir = configs['csv-dir']
-        csvname = target.split('/')[-1]
-        csvname = csvname.lower()
-        with open(f"{csvdir}/{csvname}.csv", 'w',  encoding="utf-8") as outf:
+    with open(configs['csv-name'], 'w',  encoding="utf-8") as outf:
+        for param in configs['parameters']:
+            target = param['name']
+            outf.write(f"{target},");
             for idx, x in enumerate(x_data[target]):
-                outf.write(f"{x},{y_data[target][idx]}\n")
+                outf.write(f"{y_data[target][idx]},")
+            outf.write(f"\n")
 
 
 def read_yamcs_archive(args):
@@ -131,9 +130,6 @@ def init(yaml_file):
 
     with open(yaml_file, 'r') as file:
         configs = yaml.safe_load(file)
-
-    if not os.path.exists(configs['csv-dir']):
-        os.makedirs(configs['csv-dir'])
 
     for param in configs['parameters']:
         target = param['name']

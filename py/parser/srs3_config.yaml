@@ -1,5 +1,5 @@
 pdf-name: "./srs3.pdf"
-csv-dir: "./srs3_csv"
+csv-name: "./srs3.csv"
 parameters:
   - name: "/SCSAT1/SRS-3/boot_count"
   - name: "/SCSAT1/SRS-3/gwdt_counter"

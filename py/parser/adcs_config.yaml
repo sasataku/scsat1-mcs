@@ -1,5 +1,5 @@
 pdf-name: "./adcs.pdf"
-csv-dir: "./adcs_csv"
+csv-name: "./adcs.csv"
 parameters:
   - name: "/SCSAT1/ADCS/OBC_1_TEMP"
     status: "/SCSAT1/ADCS/OBC_1_TEMP_Status"
