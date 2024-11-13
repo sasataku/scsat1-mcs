@@ -1,22 +1,42 @@
 prefix: /SCSAT1/SRS3/
 alarms:
-  - name: ping_value
-    critical:
-      high: 40
-      low: 10
-  - name: temp_mcu
-    critical:
-      high: 8500
-      low: -4000
-  - name: temp_power
+  - name: TEMP_MCU
     critical:
       high: 7000
       low: -4000
-  - name: temp_lna
-    critical:
-      high: 8500
-      low: -4000
-  - name: temp_pa
+  - name: TEMP_POWER
     critical:
       high: 7000
       low: -4000
+  - name: TEMP_LNA
+    critical:
+      high: 7000
+      low: -4000
+  - name: TEMP_PA
+    critical:
+      high: 7000
+      low: -4000
+  - name: VOLT_VIN
+    critical:
+      high: 5130
+      low: 4750
+  - name: VOLT_VREG
+    critical:
+      high: 3950
+      low: 3550
+  - name: VOLT_3V3
+    critical:
+      high: 3450
+      low: 3200
+  - name: CURR_VIN
+    critical:
+      high: 7200
+      low: 0
+  - name: CURR_VREG
+    critical:
+      high: 330
+      low: 0
+  - name: CURR_3V3
+    critical:
+      high: 960
+      low: 0

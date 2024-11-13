@@ -1,42 +1,142 @@
 prefix: /SCSAT1/EPS/
 alarms:
-  - name: temperature1 
+  - name: MPPT_CONV_VOLT_X_P
     critical:
-      high: 80
-      low: -40
-  - name: temperature2
+      high: 6000
+      low: 0
+  - name: MPPT_CONV_VOLT_Y_P
     critical:
-      high: 80
-      low: -40
-  - name: temperature3
+      high: 6000
+      low: 0
+  - name: MPPT_CONV_VOLT_X_M
     critical:
-      high: 80
-      low: -40
-  - name: temperature4
+      high: 6000
+      low: 0
+  - name: MPPT_CONV_VOLT_Y_M
     critical:
-      high: 80
-      low: -40
-  - name: temperature5
+      high: 6000
+      low: 0
+  - name: CURR_SOLAR_PANELS_X_P
     critical:
-      high: 80
-      low: -40
-  - name: temperature6
+      high: 1003
+      low: 0
+  - name: CURR_SOLAR_PANELS_Y_P
     critical:
-      high: 80
-      low: -40
-  - name: temperature7
+      high: 1003
+      low: 0
+  - name: CURR_SOLAR_PANELS_X_M
     critical:
-      high: 80
-      low: -40
-  - name: temperature8
+      high: 1003
+      low: 0
+  - name: CURR_SOLAR_PANELS_Y_M
     critical:
-      high: 80
-      low: -40
-  - name: temperature9
+      high: 1003
+      low: 0
+  - name: BATT_VOLT
+    critical:
+      high: 8400
+      low: 6000
+  - name: CURR_BATT_OUT
+    critical:
+      high: 1500
+      low: 0
+  - name: CURR_OUTPUT_MAIN_OBC_A
+    critical:
+      high: 330
+      low: 0
+  - name: CURR_OUTPUT_SRS3_A
+    critical:
+      high: 720
+      low: 0
+  - name: CURR_OUTPUT_ADCS_A
+    critical:
+      high: 1400
+      low: 0
+  - name: CURR_OUTPUT_MAIN_OBC_B
+    critical:
+      high: 330
+      low: 0
+  - name: CURR_OUTPUT_SRS3_B
+    critical:
+      high: 720
+      low: 0
+  - name: CURR_OUTPUT_ADCS_B
+    critical:
+      high: 1400
+      low: 0
+  - name: CURR_OUTPUT_RW
+    critical:
+      high: 140
+      low: 0
+  - name: CURR_OUTPUT_DSTRX3
+    critical:
+      high: 600
+      low: 0
+  - name: ALWAYS_ON_CURR_OUTPUT_3V3
+    critical:
+      high: 200
+      low: 0
+  - name: ALWAYS_ON_CURR_OUTPUT_5V
+    critical:
+      high: 90
+      low: 35
+  - name: OUTPUT_CONV_VOLT_3V3
+    critical:
+      high: 3430
+      low: 3140
+  - name: OUTPUT_CONV_VOLT_5V_A
+    critical:
+      high: 5130
+      low: 4750
+  - name: OUTPUT_CONV_VOLT_5V_B
+    critical:
+      high: 5130
+      low: 4750
+  - name: OUTPUT_CONV_VOLT_12V
+    critical:
+      high: 12280
+      low: 10000
+  - name: TEMP_MPPT_X_P
     critical:
       high: 60
       low: -20
-  - name: temperature12
+  - name: TEMP_MPPT_Y_P
+    critical:
+      high: 60
+      low: -20
+  - name: TEMP_MPPT_X_M
+    critical:
+      high: 60
+      low: -20
+  - name: TEMP_MPPT_Y_M
+    critical:
+      high: 60
+      low: -20
+  - name: TEMP_CONV_3V3
+    critical:
+      high: 60
+      low: -20
+  - name: TEMP_CONV_5V_A
+    critical:
+      high: 60
+      low: -20
+  - name: TEMP_CONV_5V_B
+    critical:
+      high: 60
+      low: -20
+  - name: TEMP_CONV_12V
+    critical:
+      high: 60
+      low: -20
+  - name: TEMP_BATT_ON_BOARD
+    critical:
+      high: 60
+      low: -20
+  - name: TEMP_BATT_EXT_IN_USE
+    critical:
+      high: 60
+      low: -20
+  - name: TEMP_MPPT_X_P
     critical:
       high: 60
       low: -20
