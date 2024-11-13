@@ -10,47 +10,56 @@ headers:
       - name: "command_id"
         bit: 8
 
-# default 設定
+# default settings
 # endian: false
 # type: int
 # signed: false
 # bit: 16
 
 containers:
-# csp 共通 reply
-  - name: ping
+# csp common reply
+  - name: REPLY_PING
     base: "common_container"
     conditions:
       - name: "../csp_sport"
         val: 1
     parameters:
-      - name: "ping_value"
-  - name: Get_amount_free
+      - name: "PING_VALUE"
+  - name: REPLY_GET_AMOUNT_FREE
     base: "common_container"
     conditions:
       - name: "../csp_sport"
         val: 3
     parameters:
-      - name: "amount_free_memory"
+      - name: "AMOUNT_FREE_MEMORY"
         bit: 32
-  - name: Get_amount
+  - name: REPLY_GET_AMOUNT
     base: "common_container"
     conditions:
       - name: "../csp_sport"
         val: 5
     parameters:
-      - name: "amount_memory"
+      - name: "AMOUNT_CSP_BUFFERS"
         bit: 32
-  - name: Sysup_time
+  - name: REPLY_SYSUP_TIME
     base: "common_container"
     conditions:
       - name: "../csp_sport"
         val: 6
     parameters:
-      - name: "Sysup_time"
+      - name: "SYSUP_TIME"
         bit: 32
+  - name: DEPLOY_MSG
+    base: "common_container"
+    conditions:
+      - name: "../csp_dport"
+        val: 10
+    parameters:
+      - name: "MESSAGE"
+        type: string
+        bit: 128
 # Command reply
-  - name: GWDT_RESET
+  - name: REPLY_RESET_GWDT
     base: "esp_container"
     conditions:
       - name: "../csp_sport"
@@ -58,22 +67,33 @@ containers:
       - name: "EPS/command_id"
         val: 0
     parameters:
-      - name: "GWDT_error_code"
+      - name: "RESET_GWDT_ERROR_CODE"
         bit: 8
         signed: true
-  - name: HW_RESET
+  - name: REPLY_CLEARMARK_GWDT
     base: "esp_container"
     conditions:
       - name: "../csp_sport"
-        val: 15      
+        val: 16
+      - name: "EPS/command_id"
+        val: 2
+    parameters:
+      - name: "CLEARMARK_GWDT_ERROR_CODE"
+        bit: 8
+        signed: true
+  - name: REPLY_EPS_HARD_RESET
+    base: "esp_container"
+    conditions:
+      - name: "../csp_sport"
+        val: 15
       - name: "EPS/command_id"
         val: 1
     parameters:
-      - name: "HW_status"
+      - name: "EPS_HARD_RESET_STATUS"
         bit: 8
         signed: true
 # esp original
-  - name: GENENAL_HK_TLM
+  - name: REPLY_GENERAL_TELEMETRY
     endian: true
     conditions:
       - name: "../csp_sport"
@@ -81,256 +101,388 @@ containers:
       - name: "EPS/command_id"
         val: 0
     parameters:
-      - name: "status"
+      - name: "STATUS_G"
         bit: 8
         signed: true
-      - name: "timestamp"
+      - name: "TIMESTAMP_G"
         type: "double"
-      - name: "uptime"
+      - name: "UPTIME"
         bit: 32
-      - name: "bootcount"
+      - name: "BOOT_COUNT_G"
         bit: 32
-      - name: "wdt_left"
+      - name: "GS_WDT_TIME_LEFT"
         bit: 32
-      - name: "wdt_count"
+      - name: "COUNTER_WDT"
         bit: 32
-      - name: "mppt_vol1"
-      - name: "mppt_vol2"
-      - name: "mppt_vol3"
-      - name: "mppt_vol4"
-      - name: "current_solar_panel1"
-      - name: "current_solar_panel2"
-      - name: "current_solar_panel3"
-      - name: "current_solar_panel4"
-      - name: "current_solar_panel5"
-      - name: "current_solar_panel6"
-      - name: "current_solar_panel7"
-      - name: "current_solar_panel8"
-      - name: "battery_voltage"
-      - name: "current_solar"
-      - name: "current_batt_in"
-      - name: "current_batt_out"
-      - name: "current_output1"
-      - name: "current_output2"
-      - name: "current_output3"
-      - name: "current_output4"
-      - name: "current_output5"
-      - name: "current_output6"
-      - name: "current_output7"
-      - name: "current_output8"
-      - name: "current_output9"
-      - name: "current_output10"
-      - name: "current_output11"
-      - name: "current_output12"
-      - name: "current_output13"
-      - name: "current_output14"
-      - name: "current_output15"
-      - name: "current_output16"
-      - name: "current_output17"
-      - name: "current_output18"
-      - name: "ao_current_output1"
-      - name: "ao_current_output2"
-      - name: "converter_vol1"
-      - name: "converter_vol2"
-      - name: "converter_vol3"
-      - name: "converter_vol4"
-      - name: "converter_vol5"
-      - name: "converter_vol6"
-      - name: "converter_vol7"
-      - name: "converter_vol8"
-      - name: "converter_state"
+      - name: "MPPT_CONV_VOLT_X_P"
+      - name: "MPPT_CONV_VOLT_Y_P"
+      - name: "MPPT_CONV_VOLT_X_M"
+      - name: "MPPT_CONV_VOLT_Y_M"
+      - name: "CURR_SOLAR_PANELS_1"
+      - name: "CURR_SOLAR_PANELS_X_P"
+      - name: "CURR_SOLAR_PANELS_3"
+      - name: "CURR_SOLAR_PANELS_Y_P"
+      - name: "CURR_SOLAR_PANELS_5"
+      - name: "CURR_SOLAR_PANELS_X_M"
+      - name: "CURR_SOLAR_PANELS_7"
+      - name: "CURR_SOLAR_PANELS_Y_M"
+      - name: "BATT_VOLT"
+      - name: "CURR_SOLAR"
+      - name: "CURR_BATT_IN"
+      - name: "CURR_BATT_OUT"
+      - name: "CURR_OUTPUT_MAIN_OBC_A"
+      - name: "CURR_OUTPUT_SRS3_A"
+      - name: "CURR_OUTPUT_ADCS_A"
+      - name: "CURR_OUTPUT_MAIN_OBC_B"
+      - name: "CURR_OUTPUT_SRS3_B"
+      - name: "CURR_OUTPUT_ADCS_B"
+      - name: "CURR_OUTPUT_7"
+      - name: "CURR_OUTPUT_RW"
+      - name: "CURR_OUTPUT_DSTRX3"
+      - name: "CURR_OUTPUT_10"
+      - name: "CURR_OUTPUT_11"
+      - name: "CURR_OUTPUT_12"
+      - name: "CURR_OUTPUT_13"
+      - name: "CURR_OUTPUT_14"
+      - name: "CURR_OUTPUT_15"
+      - name: "CURR_OUTPUT_16"
+      - name: "CURR_OUTPUT_17"
+      - name: "CURR_OUTPUT_18"
+      - name: "ALWAYS_ON_CURR_OUTPUT_3V3"
+      - name: "ALWAYS_ON_CURR_OUTPUT_5V"
+      - name: "OUTPUT_CONV_VOLT_3V3"
+      - name: "OUTPUT_CONV_VOLT_5V_A"
+      - name: "OUTPUT_CONV_VOLT_5V_B"
+      - name: "OUTPUT_CONV_VOLT_12V"
+      - name: "OUTPUT_CONV_VOLT_5"
+      - name: "OUTPUT_CONV_VOLT_6"
+      - name: "OUTPUT_CONV_VOLT_7"
+      - name: "OUTPUT_CONV_VOLT_8"
+      - name: "OUTPUT_CONV_STATUS_8"
+        bit: 1
+      - name: "OUTPUT_CONV_STATUS_7"
+        bit: 1
+      - name: "OUTPUT_CONV_STATUS_6"
+        bit: 1
+      - name: "OUTPUT_CONV_STATUS_5"
+        bit: 1
+      - name: "OUTPUT_CONV_STATUS_12V"
+        bit: 1
+      - name: "OUTPUT_CONV_STATUS_5V_B"
+        bit: 1
+      - name: "OUTPUT_CONV_STATUS_5V_A"
+        bit: 1
+      - name: "OUTPUT_CONV_STATUS_3V3"
+        bit: 1
+      - name: "OUTPUT_STATUS_RW"
+        bit: 1
+      - name: "OUTPUT_STATUS_7"
+        bit: 1
+      - name: "OUTPUT_STATUS_ADCS_B"
+        bit: 1
+      - name: "OUTPUT_STATUS_SRS3_B"
+        bit: 1
+      - name: "OUTPUT_STATUS_MAIN_OBC_B"
+        bit: 1
+      - name: "OUTPUT_STATUS_ADCS_A"
+        bit: 1
+      - name: "OUTPUT_STATUS_SRS3_A"
+        bit: 1
+      - name: "OUTPUT_STATUS_MAIN_OBC_A"
+        bit: 1
+      - name: "OUTPUT_STATUS_16"
+        bit: 1
+      - name: "OUTPUT_STATUS_15"
+        bit: 1
+      - name: "OUTPUT_STATUS_14"
+        bit: 1
+      - name: "OUTPUT_STATUS_13"
+        bit: 1
+      - name: "OUTPUT_STATUS_12"
+        bit: 1
+      - name: "OUTPUT_STATUS_11"
+        bit: 1
+      - name: "OUTPUT_STATUS_10"
+        bit: 1
+      - name: "OUTPUT_STATUS_DSTRX3"
+        bit: 1
+      - name: "OUTPUT_STATUS_RESERVED_1"
+        bit: 6
+      - name: "OUTPUT_STATUS_18"
+        bit: 1
+      - name: "OUTPUT_STATUS_17"
+        bit: 1
+      - name: "OUTPUT_STATUS_RESERVED_2"
         bit: 8
-      - name: "output_status8"
+      - name: "OUTPUT_FAULT_STATUS_RW"
         bit: 1
-      - name: "output_status7"
+      - name: "OUTPUT_FAULT_STATUS_7"
         bit: 1
-      - name: "output_status6"
+      - name: "OUTPUT_FAULT_STATUS_ADCS_B"
         bit: 1
-      - name: "output_status5"
+      - name: "OUTPUT_FAULT_STATUS_SRS3_B"
         bit: 1
-      - name: "output_status4"
+      - name: "OUTPUT_FAULT_STATUS_MAIN_OBC_B"
         bit: 1
-      - name: "output_status3"
+      - name: "OUTPUT_FAULT_STATUS_ADCS_A"
         bit: 1
-      - name: "output_status2"
+      - name: "OUTPUT_FAULT_STATUS_SRS3_A"
         bit: 1
-      - name: "output_status1"
+      - name: "OUTPUT_FAULT_STATUS_MAIN_OBC_A"
         bit: 1
-      - name: "output_status16"
+      - name: "OUTPUT_FAULT_STATUS_16"
         bit: 1
-      - name: "output_status15"
+      - name: "OUTPUT_FAULT_STATUS_15"
         bit: 1
-      - name: "output_status14"
+      - name: "OUTPUT_FAULT_STATUS_14"
         bit: 1
-      - name: "output_status13"
+      - name: "OUTPUT_FAULT_STATUS_13"
         bit: 1
-      - name: "output_status12"
+      - name: "OUTPUT_FAULT_STATUS_12"
         bit: 1
-      - name: "output_status11"
+      - name: "OUTPUT_FAULT_STATUS_11"
         bit: 1
-      - name: "output_status10"
+      - name: "OUTPUT_FAULT_STATUS_10"
         bit: 1
-      - name: "output_status9"
+      - name: "OUTPUT_FAULT_STATUS_DSTRX3"
         bit: 1
-      - name: "output_fault_status8"
+      - name: "OUTPUT_FAULT_STATUS_RESERVED_1"
+        bit: 6
+      - name: "OUTPUT_FAULT_STATUS_18"
         bit: 1
-      - name: "output_fault_status7"
+      - name: "OUTPUT_FAULT_STATUS_17"
         bit: 1
-      - name: "output_fault_status6"
-        bit: 1
-      - name: "output_fault_status5"
-        bit: 1
-      - name: "output_fault_status4"
-        bit: 1
-      - name: "output_fault_status3"
-        bit: 1
-      - name: "output_fault_status2"
-        bit: 1
-      - name: "output_fault_status1"
-        bit: 1
-      - name: "output_fault_status16"
-        bit: 1
-      - name: "output_fault_status15"
-        bit: 1
-      - name: "output_fault_status14"
-        bit: 1
-      - name: "output_fault_status13"
-        bit: 1
-      - name: "output_fault_status12"
-        bit: 1
-      - name: "output_fault_status11"
-        bit: 1
-      - name: "output_fault_status10"
-        bit: 1
-      - name: "output_fault_status9"
-        bit: 1
-      - name: "protected_access_count"
-      - name: "output_on_delta1"
-      - name: "output_on_delta2"
-      - name: "output_on_delta3"
-      - name: "output_on_delta4"
-      - name: "output_on_delta5"
-      - name: "output_on_delta6"
-      - name: "output_on_delta7"
-      - name: "output_on_delta8"
-      - name: "output_on_delta9"
-      - name: "output_on_delta10"
-      - name: "output_on_delta11"
-      - name: "output_on_delta12"
-      - name: "output_on_delta13"
-      - name: "output_on_delta14"
-      - name: "output_on_delta15"
-      - name: "output_on_delta16"
-      - name: "output_on_delta17"
-      - name: "output_on_delta18"
-      - name: "output_off_delta1"
-      - name: "output_off_delta2"
-      - name: "output_off_delta3"
-      - name: "output_off_delta4"
-      - name: "output_off_delta5"
-      - name: "output_off_delta6"
-      - name: "output_off_delta7"
-      - name: "output_off_delta8"
-      - name: "output_off_delta9"
-      - name: "output_off_delta10"
-      - name: "output_off_delta11"
-      - name: "output_off_delta12"
-      - name: "output_off_delta13"
-      - name: "output_off_delta14"
-      - name: "output_off_delta15"
-      - name: "output_off_delta16"
-      - name: "output_off_delta17"
-      - name: "output_off_delta18"
-      - name: "output_fault_count1"
+      - name: "OUTPUT_FAULT_STATUS_RESERVED_2"
         bit: 8
-      - name: "output_fault_count2"
+      - name: "PROTECTED_OUTPUT_ACCESS_COUNT"
+      - name: "OUTPUT_ON_DELTA_MAIN_OBC_A"
+      - name: "OUTPUT_ON_DELTA_SRS3_A"
+      - name: "OUTPUT_ON_DELTA_ADCS_A"
+      - name: "OUTPUT_ON_DELTA_MAIN_OBC_B"
+      - name: "OUTPUT_ON_DELTA_SRS3_B"
+      - name: "OUTPUT_ON_DELTA_ADCS_B"
+      - name: "OUTPUT_ON_DELTA_7"
+      - name: "OUTPUT_ON_DELTA_RW"
+      - name: "OUTPUT_ON_DELTA_DSTRX3"
+      - name: "OUTPUT_ON_DELTA_10"
+      - name: "OUTPUT_ON_DELTA_11"
+      - name: "OUTPUT_ON_DELTA_12"
+      - name: "OUTPUT_ON_DELTA_13"
+      - name: "OUTPUT_ON_DELTA_14"
+      - name: "OUTPUT_ON_DELTA_15"
+      - name: "OUTPUT_ON_DELTA_16"
+      - name: "OUTPUT_ON_DELTA_17"
+      - name: "OUTPUT_ON_DELTA_18"
+      - name: "OUTPUT_OFF_DELTA_MAIN_OBC_A"
+      - name: "OUTPUT_OFF_DELTA_SRS3_A"
+      - name: "OUTPUT_OFF_DELTA_ADCS_A"
+      - name: "OUTPUT_OFF_DELTA_MAIN_OBC_B"
+      - name: "OUTPUT_OFF_DELTA_SRS3_B"
+      - name: "OUTPUT_OFF_DELTA_ADCS_B"
+      - name: "OUTPUT_OFF_DELTA_7"
+      - name: "OUTPUT_OFF_DELTA_RW"
+      - name: "OUTPUT_OFF_DELTA_DSTRX3"
+      - name: "OUTPUT_OFF_DELTA_10"
+      - name: "OUTPUT_OFF_DELTA11"
+      - name: "OUTPUT_OFF_DELTA12"
+      - name: "OUTPUT_OFF_DELTA13"
+      - name: "OUTPUT_OFF_DELTA14"
+      - name: "OUTPUT_OFF_DELTA15"
+      - name: "OUTPUT_OFF_DELTA16"
+      - name: "OUTPUT_OFF_DELTA17"
+      - name: "OUTPUT_OFF_DELTA18"
+      - name: "OUTPUT_FAULT_COUNT_MAIN_OBC_A"
         bit: 8
-      - name: "output_fault_count3"
+      - name: "OUTPUT_FAULT_COUNT_SRS3_A"
         bit: 8
-      - name: "output_fault_count4"
+      - name: "OUTPUT_FAULT_COUNT_ADCS_A"
         bit: 8
-      - name: "output_fault_count5"
+      - name: "OUTPUT_FAULT_COUNT_MAIN_OBC_B"
         bit: 8
-      - name: "output_fault_count6"
+      - name: "OUTPUT_FAULT_COUNT_SRS3_B"
         bit: 8
-      - name: "output_fault_count7"
+      - name: "OUTPUT_FAULT_COUNT_ADCS_B"
         bit: 8
-      - name: "output_fault_count8"
+      - name: "OUTPUT_FAULT_COUNT_7"
         bit: 8
-      - name: "output_fault_count9"
+      - name: "OUTPUT_FAULT_COUNT_RW"
         bit: 8
-      - name: "output_fault_count10"
+      - name: "OUTPUT_FAULT_COUNT_DSTRX3"
         bit: 8
-      - name: "output_fault_count11"
+      - name: "OUTPUT_FAULT_COUNT_10"
         bit: 8
-      - name: "output_fault_count12"
+      - name: "OUTPUT_FAULT_COUNT_11"
         bit: 8
-      - name: "output_fault_count13"
+      - name: "OUTPUT_FAULT_COUNT_12"
         bit: 8
-      - name: "output_fault_count14"
+      - name: "OUTPUT_FAULT_COUNT_13"
         bit: 8
-      - name: "output_fault_count15"
+      - name: "OUTPUT_FAULT_COUNT_14"
         bit: 8
-      - name: "output_fault_count16"
+      - name: "OUTPUT_FAULT_COUNT_15"
         bit: 8
-      - name: "output_fault_count17"
+      - name: "OUTPUT_FAULT_COUNT_16"
         bit: 8
-      - name: "output_fault_count18"
+      - name: "OUTPUT_FAULT_COUNT_17"
         bit: 8
-      - name: "temperature1"
+      - name: "OUTPUT_FAULT_COUNT_18"
+        bit: 8
+      - name: "TEMP_MPPT_X_P"
         bit: 8
         signed: true
-      - name: "temperature2"
+      - name: "TEMP_MPPT_Y_P"
         bit: 8
         signed: true
-      - name: "temperature3"
+      - name: "TEMP_MPPT_X_M"
         bit: 8
         signed: true
-      - name: "temperature4"
+      - name: "TEMP_MPPT_Y_M"
         bit: 8
         signed: true
-      - name: "temperature5"
+      - name: "TEMP_CONV_3V3"
         bit: 8
         signed: true
-      - name: "temperature6"
+      - name: "TEMP_CONV_5V_A"
         bit: 8
         signed: true
-      - name: "temperature7"
+      - name: "TEMP_CONV_5V_B"
         bit: 8
         signed: true
-      - name: "temperature8"
+      - name: "TEMP_CONV_12V"
         bit: 8
         signed: true
-      - name: "temperature9"
+      - name: "TEMP_BATT_ON_BOARD"
         bit: 8
         signed: true
-      - name: "temperature10"
+      - name: "TEMP_BATT_EXT_IN_USE"
         bit: 8
         signed: true
-      - name: "temperature11"
+      - name: "TEMP_BATT_EXT_2"
         bit: 8
         signed: true
-      - name: "temperature12"
+      - name: "TEMP_BATT_EXT_3"
         bit: 8
         signed: true
-      - name: "temperature13"
+      - name: "TEMP_OUTPUT_EXPANDER_1"
         bit: 8
         signed: true
-      - name: "temperature14"
+      - name: "TEMP_OUTPUT_EXPANDER_2"
         bit: 8
         signed: true
-      - name: "battery_status"
+      - name: "BATT_STATE"
         bit: 8
-      - name: "mppt_mode"
+      - name: "MPPT_MODE"
         bit: 8
-      - name: "battery_heater_mode"
+      - name: "BATT_HEATER_MODE"
         bit: 8
-      - name: "battery_heater_status"
+      - name: "BATT_HEATER_STATE"
         bit: 8
-      - name: "ping_wdt_toggles"
-      - name: "ping_wdt_turn_offs"
+      - name: "PING_WDT_TOGGLES"
+      - name: "PING_WDT_TURN_OFFS"
         bit: 8
-  - name: SINGLE_OUTPUT_CONTROL_CMD_RES
+      - name: "THERMAL_PROTECT_TEMP_1"
+        bit: 8
+      - name: "THERMAL_PROTECT_TEMP_2"
+        bit: 8
+      - name: "THERMAL_PROTECT_TEMP_3"
+        bit: 8
+      - name: "THERMAL_PROTECT_TEMP_4"
+        bit: 8
+      - name: "THERMAL_PROTECT_TEMP_5"
+        bit: 8
+      - name: "THERMAL_PROTECT_TEMP_6"
+        bit: 8
+      - name: "THERMAL_PROTECT_TEMP_7"
+        bit: 8
+      - name: "THERMAL_PROTECT_TEMP_8"
+        bit: 8
+      - name: "BATT_INVALID_MEASUREMENT_COUNT"
+        bit: 16
+  - name: REPLY_STARTUP_TELEMETRY
+    endian: true
+    conditions:
+      - name: "../csp_sport"
+        val: 7
+      - name: "EPS/command_id"
+        val: 1
+    parameters:
+      - name: "STATUS_S"
+        bit: 8
+        signed: true
+      - name: "TIMESTAMP_S"
+        type: "double"
+      - name: "LAST_RESET_REASON_REGISTER_7TO0"
+        bit: 8
+        type: binary
+      - name: "LAST_RESET_REASON_REGISTER_15TO8"
+        bit: 8
+        type: binary
+      - name: "LAST_RESET_REASON_REGISTER_23TO16"
+        bit: 8
+        type: binary
+      - name: "LAST_RESET_REASON_REGISTER_31TO24"
+        bit: 8
+        type: binary
+      - name: "BOOT_COUNT_S"
+        bit: 32
+      - name: "FALLBACK_CONFIG_USED"
+        bit: 8
+      - name: "RTC_INIT"
+        bit: 8
+      - name: "RTC_CLOCK_SOURCE_LSE"
+        bit: 8
+      - name: "FLASH_APPLICATION_INIT"
+        bit: 8
+      - name: "FRAM_4K_PARTITION_INIT"
+        bit: 8
+        signed: true
+      - name: "FRAM_520K_PARTITION_INIT"
+        bit: 8
+        signed: true
+      - name: "INTERNAL_FLASH_PARTITION_INIT"
+        bit: 8
+        signed: true
+      - name: "FW_UPDATE_INIT"
+        bit: 8
+      - name: "FILE_SYSTEM_INIT"
+        bit: 8
+        signed: true
+      - name: "FILE_TRANSFER_INIT"
+        bit: 8
+        signed: true
+      - name: "SUPERVISOR_INIT"
+        bit: 8
+        signed: true
+      - name: "UART1_APPLICATION_INIT"
+        bit: 8
+      - name: "USER2_APPLICATION_INIT"
+        bit: 8
+      - name: "TEMP_SENSOR_INIT"
+        bit: 8
+        signed: true
+  - name: REPLY_GET_TIME
+    endian: true
+    conditions:
+      - name: "../csp_sport"
+        val: 8
+      - name: "EPS/command_id"
+        val: 0
+    parameters:
+      - name: "GET_TIME_ERROR_CODE"
+        bit: 8
+      - name: "TIMESTAMP_GT"
+        bit: 32
+  - name: REPLY_SET_TIME
+    endian: true
+    conditions:
+      - name: "../csp_sport"
+        val: 8
+      - name: "EPS/command_id"
+        val: 1
+    parameters:
+      - name: "SET_TIME_ERROR_CODE"
+        bit: 8
+  - name: REPLY_SINGLE_OUTPUT_CONTROL
     base: "esp_container"
     conditions:
       - name: "../csp_sport"
@@ -338,9 +490,9 @@ containers:
       - name: "EPS/command_id"
         val: 0
     parameters:
-      - name: "SINGLE_OUTPUT_CONTROL_CMD_error_code"
+      - name: "SINGLE_OUTPUT_CONTROL_ERROR_CODE"
         bit: 8
-  - name: ALL_OUTPUT_CONTROL_CMD_RES
+  - name: REPLY_ALL_OUTPUT_CONTROL
     base: "esp_container"
     conditions:
       - name: "../csp_sport"
@@ -348,9 +500,9 @@ containers:
       - name: "EPS/command_id"
         val: 1
     parameters:
-      - name: "ALL_OUTPUT_CONTROL_CMD_error_code"
+      - name: "ALL_OUTPUT_CONTROL_ERROR_CODE"
         bit: 8
-  - name: ELEVATE_ACCESS_ROLE_CMD_RES
+  - name: REPLY_ELEVATE_ACCESS_ROLE
     base: "esp_container"
     conditions:
       - name: "../csp_sport"
@@ -358,9 +510,9 @@ containers:
       - name: "EPS/command_id"
         val: 12
     parameters:
-      - name: "ELEVATE_ACCESS_ROLE_CMD_error_code"
+      - name: "ELEVATE_ACCESS_ROLE_ERROR_CODE"
         bit: 8
-  - name: SET_BUZZER_CHANNELS_CMD_RES
+  - name: REPLY_CFG_SET_BUZZER_CHANNELS
     base: "esp_container"
     conditions:
       - name: "../csp_sport"
@@ -368,9 +520,9 @@ containers:
       - name: "EPS/command_id"
         val: 4
     parameters:
-      - name: "SET_BUZZER_CHANNELS_CMD_error_code"
+      - name: "CFG_SET_BUZZER_CHANNELS_ERROR_CODE"
         bit: 8
-  - name: UNLOCK_CONFIG_CMD_RES
+  - name: REPLY_CFG_UNLOCK
     base: "esp_container"
     conditions:
       - name: "../csp_sport"
@@ -378,9 +530,9 @@ containers:
       - name: "EPS/command_id"
         val: 8
     parameters:
-      - name: "UNLOCK_CONFIG_CMD_error_code"
+      - name: "CFG_UNLOCK_ERROR_CODE"
         bit: 8
-  - name: LOCK_CONFIG_CMD_RES
+  - name: REPLY_CFG_LOCK
     base: "esp_container"
     conditions:
       - name: "../csp_sport"
@@ -388,9 +540,9 @@ containers:
       - name: "EPS/command_id"
         val: 9
     parameters:
-      - name: "LOCK_CONFIG_CMD_error_code"
+      - name: "CFG_LOCK_ERROR_CODE"
         bit: 8
-  - name: SAVE_CONFIG_TO_MAIN_CMD_RES
+  - name: REPLY_CFG_SAVE_TO_MAIN
     base: "esp_container"
     conditions:
       - name: "../csp_sport"
@@ -398,9 +550,9 @@ containers:
       - name: "EPS/command_id"
         val: 10
     parameters:
-      - name: "SAVE_CONFIG_TO_MAIN_CMD_error_code"
+      - name: "CFG_SAVE_TO_MAIN_ERROR_CODE"
         bit: 8
-  - name: SAVE_CONFIG_TO_FALLBACK_CMD_RES
+  - name: REPLY_CFG_SAVE_TO_FALLBACK
     base: "esp_container"
     conditions:
       - name: "../csp_sport"
@@ -408,5 +560,131 @@ containers:
       - name: "EPS/command_id"
         val: 11
     parameters:
-      - name: "SAVE_CONFIG_TO_FALLBACK_CMD_error_code"
+      - name: "CFG_SAVE_TO_FALLBACK_ERROR_CODE"
+        bit: 8
+  - name: REPLY_GET_STATUS
+    endian: true
+    conditions:
+      - name: "../csp_sport"
+        val: 9
+      - name: "EPS/command_id"
+        val: 13
+    parameters:
+      - name: "GET_STATUS_ERROR_CODE"
+        bit: 8
+      - name: "IS_INITIALIZED"
+        bit: 8
+      - name: "IS_LOCKED"
+        bit: 8
+      - name: "IS_FALLBACK_CONFIGURATION_LOADED"
+        bit: 8
+      - name: "IS_MAIN_CONFIGURATION_LOADED"
+        bit: 8
+      - name: "WAS_FALLBACK_REQUESTED"
+        bit: 8
+      - name: "INIT_SOURCE"
+        bit: 8
+      - name: "CURR_ACCESS_ROLE"
+        bit: 8
+      - name: "TOTAL_NUM_OF_ERRORS"
+        bit: 8
+      - name: "NUM_OF_PARAMETER_DOES_NOT_EXIST_ERRORS"
+        bit: 8
+      - name: "NUM_OF_INVALID_PARAMETER_TYPE_ERRORS"
+        bit: 8
+      - name: "NUM_OF_VALIDATION_FAIL_ERRORS"
+        bit: 8
+      - name: "NUM_OF_STORAGE_FAIL_ERRORS"
+        bit: 8
+      - name: "NUM_OF_NOT_INITIALIZED_ERRORS"
+        bit: 8
+      - name: "NUM_OF_NOT_LOADED_ON_INIT_ERRORS"
+        bit: 8
+      - name: "NUM_OF_LOCKED_ERRORS"
+        bit: 8
+      - name: "NUM_OF_ACCESS_DENIED_ERRORS"
+        bit: 8
+      - name: "NUM_OF_WRONG_PASSWORD_ERRORS"
+        bit: 8
+      - name: "NUM_OF_UNKNOWN_ERRORS"
+        bit: 8
+  - name: REPLY_FILE_INFO
+    endian: true
+    conditions:
+      - name: "../csp_sport"
+        val: 10
+      - name: "EPS/command_id"
+        val: 0
+    parameters:
+      - name: "FILE_ID_FI"
+        bit: 8
+      - name: "STATUS_FI"
+        bit: 8
+        signed: true
+      - name: "FILE_STATUS"
+        bit: 8
+        signed: true
+      - name: "LAST_ENTRY_ID"
+        bit: 32
+      - name: "TOTAL_ENTRIES"
+        bit: 32
+      - name: "CELL_SIZE"
+        bit: 32
+      - name: "USED_CELLS"
+        bit: 32
+      - name: "MAX_CELLS"
+        bit: 32
+      - name: "SECTOR_QTY"
+        bit: 32
+      - name: "SECTOR_SZ"
+        bit: 32
+      - name: "FILE_TYPE"
+        type: binary
+        bit: 8
+      - name: "FILE_NAME"
+        type: string
+        bit: 96
+      - name: "FILE_SIGNATURE"
+        bit: 32
+  - name: REPLY_FILE_DOWNLOAD
+    endian: true
+    conditions:
+      - name: "../csp_sport"
+        val: 10
+      - name: "EPS/command_id"
+        val: 1
+    parameters:
+      - name: "FILE_ID_FD"
+        bit: 8
+      - name: "STATUS_FD"
+        bit: 8
+        signed: true
+  - name: DATA_PACKET_STREAM
+    endian: true
+    conditions:
+      - name: "../csp_sport"
+        val: 10
+      - name: "EPS/command_id"
+        val: 2
+    parameters:
+      - name: "FILE_ID_DPS"
+        bit: 8
+      - name: "FIRST_ENTRY_ID"
+        bit: 32
+      - name: "OFFSET"
+        bit: 16
+      - name: "ENTRY_DATA_LEN"
+        bit: 8
+      - name: "ENTRY_DATA"
+        type: binary
+        bit: 992
+  - name: REPLY_GWDT_REINIT
+    endian: true
+    conditions:
+      - name: "../csp_sport"
+        val: 16
+      - name: "EPS/command_id"
+        val: 4
+    parameters:
+      - name: "GWDT_REINIT_ERROR_CODE"
         bit: 8
