@@ -33,11 +33,16 @@ dataLinks:
         errorDetection: none
         useLocalGenerationTime: true
         seqCountOffset: -1
-        timestampOffset: -1
+        timestampOffset: 6
+        byteOrder: LITTLE_ENDIAN
+        timeEncoding:
+          type: FLOAT64
+          epoch: CUSTOM
+          epochUTC: "1970-01-01T00:00:00Z"
       stream: tm_realtime
       port: 52004
       # Give the embedded simulator some time to boot up
-      #initialDelay: 2000      
+      #initialDelay: 2000
     - name: tm_dump
       class: org.yamcs.tctm.TcpTmDataLink
       stream: tm_dump
